@@ -2,7 +2,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, IntegerField, PasswordField, SelectField,
                      StringField)
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired, NumberRange, Optional
 
 
 class AccountForm(FlaskForm):
@@ -15,7 +15,7 @@ class AccountForm(FlaskForm):
     library_type = SelectField('Library Type', choices=[])
     library_username = StringField('Library Username/Card Number', validators=[DataRequired()])
     library_password = PasswordField('Library Password/PIN', validators=[DataRequired()])
-    renewal_interval = IntegerField('Renewal Interval Override (hours)', validators=[])
+    renewal_interval = IntegerField('Renewal Interval Override (hours)', validators=[Optional(), NumberRange(min=1)])
     active = BooleanField('Active', default=True)
 
 
@@ -26,7 +26,7 @@ class EditAccountForm(FlaskForm):
     library_type = SelectField('Library Type', choices=[])
     library_username = StringField('Library Username/Card Number', validators=[DataRequired()])
     library_password = PasswordField('Library Password/PIN', validators=[])
-    renewal_interval = IntegerField('Renewal Interval Override (hours)', validators=[])
+    renewal_interval = IntegerField('Renewal Interval Override (hours)', validators=[Optional(), NumberRange(min=1)])
     active = BooleanField('Active', default=True)
 
 

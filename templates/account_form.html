@@ -62,6 +62,7 @@
                         {{ form.renewal_interval.label(class="label") }}
                         {{ form.renewal_interval(class="input", placeholder="Inherits from library default") }}
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Override how often this account renews. Blank = use library default.</p>
+                        {% if form.renewal_interval.errors %}<p class="mt-1 text-xs text-red-600">{{ form.renewal_interval.errors[0] }}</p>{% endif %}
                     </div>
                     <label class="flex items-center gap-3">
                         {{ form.active(class="h-4 w-4 rounded text-brand-600 focus:ring-brand-500") }}

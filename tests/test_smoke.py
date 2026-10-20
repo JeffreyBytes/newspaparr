@@ -49,3 +49,29 @@ def test_renewer_state_enum_complete():
     actual = {s.name for s in State}
     missing = expected - actual
     assert not missing, f"renewer.State is missing: {missing}"
+
+
+def test_add_account_with_blank_interval_creates_account(app_client, monkeypatch):
+    """Regression: a blank renewal-interval override failed IntegerField
+    validation silently, so pressing Create just re-rendered the form."""
+    app_mod, client = app_client
+    monkeypatch.setattr(app_mod, "schedule_account_renewal", lambda account: None)
+    with app_mod.app.app_context():
+        lib = app_mod.LibraryConfig(name="Test Library", type="test_lib",
+                                    nyt_url="https://example.test/nyt",
+                                    default_renewal_hours=24, active=True)
+        app_mod.db.session.add(lib)
+        app_mod.db.session.commit()
+
+    resp = client.post("/accounts/add", data={
+        "name": "Blank Interval",
+        "library_type": "test_lib",
+        "library_username": "12345",
+        "library_password": "pin",
+        "renewal_interval": "",
+        "active": "y",
+    })
+    assert resp.status_code == 302, resp.get_data(as_text=True)
+    with app_mod.app.app_context():
+        account = app_mod.Account.query.filter_by(name="Blank Interval").one()
+        assert account.renewal_interval is None

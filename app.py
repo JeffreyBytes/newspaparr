@@ -286,8 +286,6 @@ def add_account():
             library_username=form.library_username.data,
             library_password=form.library_password.data,
             newspaper_type='nyt',
-            username=None,
-            password=None,
             renewal_hours=library_config.default_renewal_hours,
             renewal_interval=form.renewal_interval.data if form.renewal_interval.data else None,
             active=form.active.data
